@@ -1,4 +1,3 @@
-# Existing import statements
 from django.test import TestCase
 from myapp.models import MyModel
 # Existing test case classes
@@ -6,11 +5,11 @@ from myapp.models import MyModel
 class MyModelTestCase(TestCase):
     def setUp(self):
         # Create a model instance
-        self.instance = MyModel.objects.create(field1='value1', field2='value2')
+        self.instance = MyModel.objects.create()
 
     def test_pk_cleared_post_deletion(self):
         # Ensure the instance has a PK before deletion
-        self.assertIsNotNone(self.instance.pk)
+        self.assertTrue(self.instance.pk is not None)
 
         # Delete the instance
         self.instance.delete()
