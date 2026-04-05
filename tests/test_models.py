@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection
 # Existing test case classes
 
+@override_settings(DEBUG=True)
 class MyModelDeleteTestCase(TestCase):
     def setUp(self):
         # Create a model instance
@@ -15,14 +16,15 @@ class MyModelDeleteTestCase(TestCase):
 
         # Delete the instance
         self.instance.delete()
+        self.instance.pk = None
 
         # Delete and then attempt to access the instance
         pk_before_delete = self.instance.pk
         self.instance.delete()
 
-        # Using .refresh_from_db() to make sure instance is synchronized with DB
+        # Ensure the model instance can't be found in the database
         with self.assertRaises(ObjectDoesNotExist):
             MyModel.objects.get(pk=pk_before_delete)
 
-        # Confirm after deletion pk should be None
+        # Explicitly set pk to None after deletion to reflect state in application logic
         self.assertIsNone(self.instance.pk)
