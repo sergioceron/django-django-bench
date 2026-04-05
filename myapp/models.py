@@ -1,5 +1,5 @@
-def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
+def delete(self, using=None, keep_parents=False):
+        super(MyModel, self).delete(using=using, keep_parents=keep_parents)
         self.pk = None
         super().delete(using=using, keep_parents=keep_parents)
         self.pk = None
