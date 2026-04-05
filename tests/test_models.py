@@ -3,6 +3,11 @@ from myapp.models import MyModel
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 
+import pytest
+from django.db import IntegrityError
+from myapp.models import MyModel
+from django.core.exceptions import ObjectDoesNotExist
+
 class MyModelTestCase(TestCase):
 
     def test_pk_cleared_on_delete(self):
