@@ -1,6 +1,8 @@
 from django.test import TestCase
 from myapp.models import MyModel
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
+
 class MyModelTestCase(TestCase):
 
     def test_pk_cleared_on_delete(self):
