@@ -1,7 +1,7 @@
-def delete(self, using=None, keep_parents=False):
-        super(MyModel, self).delete(using=using, keep_parents=keep_parents)
-        if not self._state.adding and not MyModel.objects.filter(pk=self.pk).exists():
-            self.pk = None
+@receiver(post_delete, sender=MyModel)
+def clear_pk_after_delete(sender, instance, **kwargs):
+    # Set instance pk to None after deletion
+    instance.pk = None
         super().delete(using=using, keep_parents=keep_parents)
         self.pk = None
         pk = self.pk
