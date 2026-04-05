@@ -1,3 +1,6 @@
 def delete(self, *args, **kwargs):
+        # Invalidate the primary key before deleting
+        obj_id = self.pk
         super().delete(*args, **kwargs)
-        self.pk = None
+        if not obj_id:
+            self.pk = None
