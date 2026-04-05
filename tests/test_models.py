@@ -1,6 +1,8 @@
 from django.test import TestCase
 from myapp.models import MyModel
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.db import connection
 # Existing test case classes
 
@@ -11,6 +13,10 @@ class MyModelDeleteTestCase(TestCase):
         self.instance = MyModel.objects.create()
 
     def test_pk_is_none_after_delete(self):
+
+        # Ensure PK is not None before deletion
+        self.assertIsNotNone(self.instance.pk)
+
         # Ensure the instance has a PK before deletion
         self.assertIsNotNone(self.instance.pk)
 
@@ -26,5 +32,9 @@ class MyModelDeleteTestCase(TestCase):
         with self.assertRaises(ObjectDoesNotExist):
             MyModel.objects.get(pk=pk_before_delete)
 
-        # Explicitly set pk to None after deletion to reflect state in application logic
-        self.assertIsNone(self.instance.pk)
+        # Confirm the instance pk is set to None after deletion
+        self.assertIsNone(self._get_instance_pk())
+
+    def _get_instance_pk(self):
+        # Helper method for reflecting the pk changes post deletion
+        return self.instance.pk
