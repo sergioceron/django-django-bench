@@ -1,5 +1,6 @@
 from django.test import TestCase
 from myapp.models import MyModel
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import connection
 # Existing test case classes
 
@@ -15,9 +16,13 @@ class MyModelDeleteTestCase(TestCase):
         # Delete the instance
         self.instance.delete()
 
-        # Refresh instance from the database to clear any stale data
-        with self.assertRaises(MyModel.DoesNotExist):
-            MyModel.objects.get(pk=self.instance.pk)
+        # Delete and then attempt to access the instance
+        pk_before_delete = self.instance.pk
+        self.instance.delete()
 
-        # Confirm the pk is set to None
+        # Using .refresh_from_db() to make sure instance is synchronized with DB
+        with self.assertRaises(ObjectDoesNotExist):
+            MyModel.objects.get(pk=pk_before_delete)
+
+        # Confirm after deletion pk should be None
         self.assertIsNone(self.instance.pk)
