@@ -1,15 +1,16 @@
 from django.test import TestCase
 from myapp.models import MyModel
+from django.db import models
 # Existing test case classes
 
 class MyModelTestCase(TestCase):
     def setUp(self):
         # Create a model instance
-        self.instance = MyModel.objects.create()
+        self.instance = MyModel.objects.create(field1='value1', field2='value2')
 
     def test_pk_cleared_post_deletion(self):
         # Ensure the instance has a PK before deletion
-        self.assertTrue(self.instance.pk is not None)
+        self.assertIsNotNone(self.instance.pk)
 
         # Delete the instance
         self.instance.delete()
