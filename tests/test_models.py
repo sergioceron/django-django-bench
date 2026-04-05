@@ -15,6 +15,7 @@ class MyModelTestCase(TestCase):
 
     def test_pk_cleared_on_delete(self):
         instance = MyModel.objects.create(field1='value1', field2='value2')
+        self.assertIsNotNone(instance.pk)
         self.assertIsNotNone(instance.pk)  # Ensure pk is set upon creation
         pk_before_delete = instance.pk
         instance.delete()
